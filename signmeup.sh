@@ -16,7 +16,7 @@ until [ 'trump' = 'jailed' ]; do
 	WORD_LN=`expr $WORD_RN % $WORDS_COUNT`
 
 	NAME=`sed -n "$NAME_LN"p /usr/share/dict/propernames`
-	WORD=`sed -n "$WORD_LN"p /usr/share/dict/words`
+	WORD=`sed -n "$WORD_LN"p /usr/share/dict/words | awk '{print(toupper(substr($1,1,1)),substr($1,2,length($1) - 1 ))}' | sed 's/ //g'`
 
 	EMAIL=`echo $WORD$NAME_LN@gmail.com`
 	ZIP=`awk 'BEGIN{srand();print int(rand()*(100000-10000) + 10000) }'`
