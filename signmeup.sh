@@ -21,10 +21,19 @@ until [ 'trump' = 'jailed' ]; do
 	EMAIL=`echo $WORD$NAME_LN@gmail.com`
 	ZIP=`awk 'BEGIN{srand();print int(rand()*(100000-10000) + 10000) }'`
 
-	CMD="curl -F 'full_name=$NAME $WORD' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $URL"
+	QBODY=""
+	for i in `seq 1 8`; 
+	do 
+		RSEED=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'`
+		QNUM=`awk -v seed=$RSEED 'BEGIN{srand(seed);print int(rand()*23 + 388) }'`
+		QBODY="$QBODY -F 'question_"$QNUM"_1=Yes'"
+
+	done
+
+	CMD="curl -F 'full_name=$NAME $WORD' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $QBODY $URL"
 
 	# Uncomment to test output
-	# echo $CMD
+	echo $CMD
 
-	curl -F 'full_name=$NAME $WORD' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $URL
+	eval $CMD
 done
