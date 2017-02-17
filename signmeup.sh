@@ -23,7 +23,7 @@ until [ 'trump' = 'jailed' ]; do
 
 	#Spit out random name and word; capitalize word
 	NAME=`sed -n "$NAME_LN"p $NAMES_FILE`
-	WORD=`sed -n "$WORD_LN"p $WORDS_FILE | awk '{print(toupper(substr($1,1,1)),substr($1,2,length($1) - 1 ))}' | sed 's/ //g'`
+	WORD=`sed -n "$WORD_LN"p $WORDS_FILE |  awk '{print(toupper(substr($1,1,1)))substr($1,2,length($1) - 1)}'`
 
 	# email = last name ($WORD) + number + gmail.com
 	EMAIL=`echo $WORD$NAME_LN@gmail.com`
