@@ -45,7 +45,7 @@ until [ 'trump' = 'jailed' ]; do
 
 	done
 
-	CMD="curl -A '$USER_AGENT'-F 'full_name=$NAME $WORD' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $QBODY $URL"
+	CMD="curl -A '$USER_AGENT' -F 'full_name=$NAME $WORD' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $QBODY $URL"
 
 	# Uncomment to test output
 	echo $CMD
