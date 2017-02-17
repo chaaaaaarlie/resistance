@@ -50,5 +50,5 @@ until [ 'trump' = 'jailed' ]; do
 	# Uncomment to test output
 	echo $CMD
 
-	#eval $CMD
+	eval $CMD
 done
