@@ -33,7 +33,9 @@ until [ 'trump' = 'jailed' ]; do
 	QBODY=""
 	for i in `seq 1 8`; 
 	do	
-		case `expr $RANDO % 3` in
+		RSEED=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'`
+	
+		case `expr $RSEED % 3` in
 			0)
 				RESPONSE="Yes"
 				;;
@@ -45,7 +47,7 @@ until [ 'trump' = 'jailed' ]; do
 				;;
 		esac
 		# generate random question ID between 388-411 
-		QNUM=`awk -v seed=$RANDO 'BEGIN{srand(seed);print int(rand()*23 + 388) }'`
+		QNUM=`awk -v seed=$RSEED 'BEGIN{srand(seed);print int(rand()*23 + 388) }'`
 		QBODY="$QBODY -F 'question_"$QNUM"_1=$RESPONSE'"
 
 	done
