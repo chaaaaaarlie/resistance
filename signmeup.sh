@@ -18,7 +18,7 @@ until [ 'trump' = 'jailed' ]; do
 	NAME_LN=`expr $NAME_RN % $NAMES_COUNT`
 	WORD_LN=`expr $WORD_RN % $WORDS_COUNT`
 
-	NAME=`sed -n "$NAME_LN"p $NAMES_FILES`
+	NAME=`sed -n "$NAME_LN"p $NAMES_FILE`
 	WORD=`sed -n "$WORD_LN"p $WORDS_FILE | awk '{print(toupper(substr($1,1,1)),substr($1,2,length($1) - 1 ))}' | sed 's/ //g'`
 
 	EMAIL=`echo $WORD$NAME_LN@gmail.com`
