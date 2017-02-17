@@ -1,10 +1,13 @@
 #! /bin/bash
 
-until [ 'trump' = 'jailed' ]; do
-	URL=https://gop.com/survey/mainstream-media-accountability-survey/
+USER_AGENT="Mozilla/5.0 (Windows NT 6.1; rv:50.0) Gecko/20100101 Firefox/50.0"
+URL=https://gop.com/survey/mainstream-media-accountability-survey/
 
-	WORDS_FILE=/usr/share/dict/words
-	NAMES_FILE=/usr/share/dict/propernames
+WORDS_FILE=/usr/share/dict/words
+NAMES_FILE=/usr/share/dict/propernames
+
+until [ 'trump' = 'jailed' ]; do
+	
 
 	NAME_RN=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'` 
 	WORD_RN=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'` 
@@ -23,17 +26,29 @@ until [ 'trump' = 'jailed' ]; do
 
 	QBODY=""
 	for i in `seq 1 8`; 
-	do 
+	do
 		RSEED=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'`
+		
+		case `expr $RSEED % 3` in
+			0)
+				RESPONSE="Yes"
+				;;
+			1)	
+				RESPONSE="No"
+				;;
+			2)
+				RESPONSE="No opinion"
+				;;
+		esac
 		QNUM=`awk -v seed=$RSEED 'BEGIN{srand(seed);print int(rand()*23 + 388) }'`
-		QBODY="$QBODY -F 'question_"$QNUM"_1=Yes'"
+		QBODY="$QBODY -F 'question_"$QNUM"_1=$RESPONSE'"
 
 	done
 
-	CMD="curl -F 'full_name=$NAME $WORD' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $QBODY $URL"
+	CMD="curl -A '$USER_AGENT'-F 'full_name=$NAME $WORD' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $QBODY $URL"
 
 	# Uncomment to test output
 	echo $CMD
 
-	eval $CMD
+	#eval $CMD
 done
