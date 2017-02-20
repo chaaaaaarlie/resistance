@@ -4,13 +4,15 @@
 # Common variables
 USER_AGENT="Mozilla/5.0 (Linux; Android 6.0.1; SM-G920V Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.85 Mobile Safari/537.36"
 URL=https://gop.com/survey/mainstream-media-accountability-survey/
+REF_URL=https://gop.com/mainstream-media-accountability-survey/
+XSRF_TOKEN=p0pnUPqgfPXkNTXuOmztQLArp4POf4dG
 
 WORDS_FILE=/usr/share/dict/words
 NAMES_FILE=/usr/share/dict/propernames
 
 until [ 'trump' = 'jailed' ]; do
     
-
+    echo `date`
 	#Generate 32-bit random integer
 	RANDO=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'` 
 	
@@ -58,7 +60,7 @@ until [ 'trump' = 'jailed' ]; do
 	done
 
 	# Create curl call
-	CMD="curl -A '$USER_AGENT' -F 'full_name=$NAME $WORD_UPPER' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $QBODY $URL"
+	CMD="curl -A '$USER_AGENT' -F 'full_name=$NAME $WORD_UPPER' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $QBODY -F 'csrfmiddlewaretoken=$XSRF_TOKEN' --referer $REF_URL $URL"
 
 	# Uncomment to test output
 	echo $CMD
