@@ -3,15 +3,26 @@
 
 # Common variables
 USER_AGENT="Mozilla/5.0 (Linux; Android 6.0.1; SM-G920V Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.85 Mobile Safari/537.36"
-URL=https://gop.com/survey/mainstream-media-accountability-survey/
-REF_URL=https://gop.com/mainstream-media-accountability-survey/
-XSRF_TOKEN=p0pnUPqgfPXkNTXuOmztQLArp4POf4dG
-
+URL=https://gop.com/president-trump-first-50-survey/
+REF_URL=https://gop.com/president-trump-first-50-survey/
 WORDS_FILE=/usr/share/dict/words
 NAMES_FILE=/usr/share/dict/propernames
+COOKIES=$PWD/cookies.txt
+CURL_BIN="curl -s -c $COOKIES -b $COOKIES -e $REF_URL"
 
 until [ 'trump' = 'jailed' ]; do
-    
+
+	#make a .txt file for the cookie data
+    touch $COOKIES
+
+    echo -n "get csrftoken ..."
+	echo
+	$CURL_BIN $URL > /dev/null
+	XSRF_TOKEN="$(grep csrftoken $COOKIES | sed 's/^.*csrftoken[[:space:]]\s*//')"
+
+	echo -n "token obtained:"$XSRF_TOKEN
+	echo
+
     echo `date`
 	#Generate 32-bit random integer
 	RANDO=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'` 
@@ -36,35 +47,42 @@ until [ 'trump' = 'jailed' ]; do
 	EMAIL=`echo $WORD$NAME_LN@gmail.com`
 	ZIP=`awk 'BEGIN{srand();printf("%05d", int(rand()*99998 )+ 1) }'`
 
-	#Randomly answer 8 questions from survey with random answers
+	#answer all questions randomly, skip last two
 	QBODY=""
-	for i in `seq 1 8`; 
+	QNUM=3500
+	for i in `seq 1 24`; 
 	do	
 		RSEED=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'`
 	
 		case `expr $RSEED % 3` in
 			0)
-				RESPONSE="Yes"
+				RESPONSE="Approve"
 				;;
 			1)	
-				RESPONSE="No"
+				RESPONSE="Disapprove"
 				;;
 			2)
 				RESPONSE="No opinion"
 				;;
 		esac
-		# generate random question ID between 388-411 
-		QNUM=`awk -v seed=$RSEED 'BEGIN{srand(seed);print int(rand()*23 + 388) }'`
-		QBODY="$QBODY -F 'question_"$QNUM"_1=$RESPONSE'"
+		
+		#increment question number
+		QNUM=$[$QNUM+1]
+		QBODY="$QBODY -F 'id_question_0_"$QNUM"=$RESPONSE'"
 
 	done
 
 	# Create curl call
-	CMD="curl -A '$USER_AGENT' -F 'full_name=$NAME $WORD_UPPER' -F 'email=$EMAIL' -F  'postal_code=$ZIP' $QBODY -F 'csrfmiddlewaretoken=$XSRF_TOKEN' --referer $REF_URL $URL"
+
+	CMD="curl -s -c $COOKIES -b $COOKIES -e -A '$USER_AGENT' -F 'id_full_name=$NAME $WORD_UPPER' -F 'id_email=$EMAIL' -F  'id_postal_code=$ZIP' $QBODY -F 'csrfmiddlewaretoken=$XSRF_TOKEN' --referer $REF_URL $URL"
 
 	# Uncomment to test output
 	echo $CMD
 
-	# Fire away
+	# Fire Away
 	eval $CMD
+	
+	#Clean Up!
+	echo "finish session"
+	rm $COOKIES
 done
