@@ -2,34 +2,37 @@
 
 
 # Common variables
-USER_AGENT="Mozilla/5.0 (Linux; Android 6.0.1; SM-G920V Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.85 Mobile Safari/537.36"
 URL=https://gop.com/survey/mainstream-media-accountability-survey/
 REF_URL=https://gop.com/mainstream-media-accountability-survey/
-XSRF_TOKEN=p0pnUPqgfPXkNTXuOmztQLArp4POf4dG
+
 
 WORDS_FILE=/usr/share/dict/words
 NAMES_FILE=/usr/share/dict/propernames
+USER_AGENT_FILE=useragent.txt
+
+export LC_CTYPE=C
 
 until [ 'trump' = 'jailed' ]; do
-    
+
+    XSRF_TOKEN="p0pnUPqgfPXkNTXuOmztQLArp4POf4dG"
+    #XSRF_TOKEN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
     echo `date`
 	#Generate 32-bit random integer
 	RANDO=`od   -An -N4 -tu1 < /dev/urandom | sed 's/ //g'` 
 	
-	WK_VER=`expr $RANDOM % 3`.`expr $RANDOM % 5`.`expr $RANDOM % 10`
-
-	USER_AGENT="Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/60"$WK_VER" (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/60"$WK_VER
 	# Get # of lines in word/name files
 	NAMES_COUNT=`wc -l $NAMES_FILE | awk '{print $1}'`
 	WORDS_COUNT=`wc -l $WORDS_FILE | awk '{print $1}'`
-
+	UA_COUNT=`wc -l $USER_AGENT_FILE | awk '{print $1}'`
 	#Select random line in word/name files
 	NAME_LN=`expr $RANDO % $NAMES_COUNT`
 	WORD_LN=`expr $RANDO % $WORDS_COUNT`
+	UA_LN=`expr $RANDO % $UA_COUNT`
 
 	#Spit out random name and word; capitalize word
 	NAME=`sed -n "$NAME_LN"p $NAMES_FILE`
 	WORD=`sed -n "$WORD_LN"p $WORDS_FILE`
+	USER_AGENT=`sed -n "$UA_LN"p $USER_AGENT_FILE`
 
 	WORD_UPPER=`echo $WORD | awk '{print(toupper(substr($1,1,1)))substr($1,2,length($1) - 1)}'`
 	# email = last name ($WORD) + number + gmail.com
