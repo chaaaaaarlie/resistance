@@ -85,4 +85,6 @@ until [ 'trump' = 'jailed' ]; do
 	#Clean Up!
 	echo "finish session"
 	rm $COOKIES
+
+	sleep 20s
 done
