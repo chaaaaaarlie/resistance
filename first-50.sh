@@ -2,15 +2,24 @@
 
 
 # Common variables
+<<<<<<< HEAD:signmeup.sh
+USER_AGENT="Mozilla/5.0 (Linux; Android 6.0.1; SM-G920V Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.85 Mobile Safari/537.36"
+=======
+>>>>>>> chaaaaaarlie/gop-multi-survey:first-50.sh
 URL=https://gop.com/president-trump-first-50-survey/
 REF_URL=https://gop.com/president-trump-first-50-survey/
 WORDS_FILE=/usr/share/dict/words
 NAMES_FILE=/usr/share/dict/propernames
+<<<<<<< HEAD:signmeup.sh
+COOKIES=./cookies.txt
+CURL_BIN="curl -s -c $COOKIES -b $COOKIES -e $REF_URL"
+=======
 COOKIES=$PWD/cookies.txt
 CURL_BIN="curl -s -c $COOKIES -b $COOKIES -e $REF_URL"
 USER_AGENT_FILE=useragent.txt
 
 export LC_CTYPE=C
+>>>>>>> chaaaaaarlie/gop-multi-survey:first-50.sh
 
 until [ 'trump' = 'jailed' ]; do
 
@@ -79,7 +88,11 @@ until [ 'trump' = 'jailed' ]; do
 
 	# Create curl call
 
+<<<<<<< HEAD:signmeup.sh
+	CMD="curl -S -c $COOKIES -b $COOKIES -A '$USER_AGENT' -F 'id_full_name=$NAME $WORD_UPPER' -F 'id_email=$EMAIL' -F  'id_postal_code=$ZIP' $QBODY -F 'csrfmiddlewaretoken=$XSRF_TOKEN' -e $REF_URL $URL"
+=======
 	CMD="curl -s -c $COOKIES -b $COOKIES -e -A '$USER_AGENT' -F 'id_full_name=$NAME $WORD_UPPER' -F 'id_email=$EMAIL' -F  'id_postal_code=$ZIP' $QBODY -F 'csrfmiddlewaretoken=$XSRF_TOKEN' --referer $REF_URL $URL"
+>>>>>>> chaaaaaarlie/gop-multi-survey:first-50.sh
 
 	# Uncomment to test output
 	echo $CMD
@@ -90,6 +103,10 @@ until [ 'trump' = 'jailed' ]; do
 	#Clean Up!
 	echo "finish session"
 	rm $COOKIES
+<<<<<<< HEAD:signmeup.sh
+done
+=======
 
 	sleep 20s
 done
+>>>>>>> chaaaaaarlie/gop-multi-survey:first-50.sh
