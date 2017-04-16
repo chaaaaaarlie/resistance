@@ -1,0 +1,195 @@
+Here's a code example from the GOP's survey:
+
+<div class="form-field-body">
+	<ul id="id_question_3251">
+		<li><label for="id_question_3251_0"><input id="id_question_3251_0" name="question_3251" type="radio" value="Donald J. Trump" /> Donald J. Trump</label></li>
+		<li><label for="id_question_3251_1"><input id="id_question_3251_1" name="question_3251" type="radio" value="Hillary Clinton" /> Hillary Clinton</label></li>
+	</ul>
+</div>
+
+observations:
+the following
+clicking on the radio button for Donald J. Trump on the website selected the following:
+	id = id_question_3251_0
+	value = Donald J. Trump
+This is likely what our curl submission would have to provide.
+We dealt with this previous with the line of code:
+	QBODY="$QBODY -F 'id_question_"$QNUM"_"$RESPONSE_NUM"=$RESPONSE'"
+Where QBODY is the data field for the curl command; QNUM is matched to the questionaire's id value less the value of the $RESPONSE_NUM, and $RESPONSE is the text in the "value" field.
+The result would be something like id_question_3251_0=Donald J. Trump
+After looking into forms from the client and server sides, I don't think this is the correct usage.
+I think only the 'name' and 'value' get sent to the server
+
+form and php basics 				https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_and_retrieving_form_data
+setting up html Forms 				https://www.w3.org/wiki/HTML_forms_-_the_basics
+processing forms with php			https://www.joedolson.com/2007/02/processing-forms-with-php/
+form example from w3 schools		https://www.w3schools.com/php/php_form_complete.asp
+basics of using curl 				https://davidwalsh.name/curl-post-file
+differences between GET and POST 	http://www.cs.tut.fi/~jkorpela/forms/methods.html
+
+Code examples from the Whitehouse.gov's survey:
+
+Simple field for first name
+<div class="form-item webform-component webform-component-sf-firstname webform-component--first-name">
+  <label for="edit-submitted-first-name">First Name <span class="form-required" title="This field is required.">*</span></label>
+ <input required="required" type="text" id="edit-submitted-first-name" name="submitted[first_name]" value="" size="60" maxlength="40" class="form-text required">
+</div>
+
+More complex field with multiple selection:
+<div  class="form-item webform-component webform-component-select webform-component--cabinet-agencies">
+	<label for="edit-submitted-cabinet-agencies">Select Cabinet Agency (Select as many as applicable): <span class="form-required" title="This field is required.">*</span></label>
+		<select required="required" multiple="multiple" name="submitted[cabinet_agencies][]" id="edit-submitted-cabinet-agencies" size="4" class="form-select required">
+			<option value="0">-NONE-</option>
+			<option value="1">	Central Intelligence Agency: Full Agency</option>
+			<option value="2">	Department of Agriculture: Full Department</option>
+			<option value="3">	Department of Agriculture: Agricultural Marketing Service</option>
+			<option value="4">	Department of Agriculture: Agricultural Research Service</option>
+			<option value="5">	Department of Agriculture: Animal and Plant Health Inspection Service</option>
+			<option value="6">	Department of Agriculture: Center for Nutritional Policy and Promotion</option>
+			<option value="7">	Department of Agriculture: Economic Research Service</option>
+			<option value="8">	Department of Agriculture: Farm Service Agency</option>
+			<option value="9">	Department of Agriculture: Food and Nutrition Service</option>
+			<option value="10">	Department of Agriculture: Food Safety and Inspection Service</option>
+			<option value="11">	Department of Agriculture: Foreign Agricultural Service</option>
+			<option value="12">	Department of Agriculture: Forest Service</option>
+			<option value="13">	Department of Agriculture: Grain Inspection, Packers and Stockyards Administration</option>
+			<option value="14">	Department of Agriculture: National Agricultural Library</option>
+			<option value="15">	Department of Agriculture: National Agricultural Statistics Service</option>
+			<option value="16">	Department of Agriculture: National Institute of Food and Agriculture</option>
+			<option value="17">	Department of Agriculture: Natural Resources Conservation Service</option>
+			<option value="18">	Department of Agriculture: Risk Management Agency</option>
+			<option value="19">	Department of Agriculture: Rural Development</option>
+			<option value="20">	Department of Commerce: Full Department</option>
+			<option value="21">	Department of Commerce: Bureau of Economic Analysis</option>
+			<option value="22">	Department of Commerce: Bureau of Industry and Security</option>
+			<option value="23">	Department of Commerce: Bureau of the Census</option>
+			<option value="24">	Department of Commerce: Economic Development Administration</option>
+			<option value="25">	Department of Commerce: Economics and Statistics Administration</option>
+			<option value="26">	Department of Commerce: International Trade Administration</option>
+			<option value="27">	Department of Commerce: Minority Business Development Agency</option>
+			<option value="28">	Department of Commerce: National Institute of Standards and Technology</option>
+			<option value="29">	Department of Commerce: National Oceanic and Atmospheric Administration</option>
+			<option value="30">	Department of Commerce: National Technical Information Service</option>
+			<option value="31">	Department of Commerce: National Telecommunications and Information Administration</option>
+			<option value="32">	Department of Commerce: U.S. Patent and Trademark Office</option>
+			<option value="33">	Department of Defense: Full Department</option>
+			<option value="34">	Department of Defense: Department of the Army</option>
+			<option value="35">	Department of Defense: Department of the Navy (including the U.S. Marine Corps)</option>
+			<option value="36">	Department of Defense: Department of the Air Force</option>
+			<option value="37">	Department of Defense: Office of the Secretary of Defense</option>
+			<option value="38">	Department of Defense: Joint Chiefs of Staff</option>
+			<option value="39">	Department of Education: Full Department</option>
+			<option value="40">	Department of Education: Institute of Education Sciences</option>
+			<option value="41">	Department of Education: Office of Elementary and Secondary Education</option>
+			<option value="42">	Department of Education: Office of English Language Acquisition</option>
+			<option value="43">	Department of Education: Office of Federal Student Aid</option>
+			<option value="44">	Department of Education: Office of Innovation and Improvement</option>
+			<option value="45">	Department of Education: Office of Postsecondary Education</option>
+			<option value="46">	Department of Education: Office of Special Education and Rehabilitative Services</option>
+			<option value="47">	Department of Education: Office of Vocational and Adult Education</option>
+			<option value="48">	Department of Energy: Full Department</option>
+			<option value="49">	Department of Energy: Environmental and Other Defense Activities</option>
+			<option value="50">	Department of Energy: National Nuclear Security Administration</option>
+			<option value="51">	Department of Energy: Power Marketing Administrations</option>
+			<option value="52">	Department of Health and Human Services: Full Department</option>
+			<option value="53">	Department of Health and Human Services: Administration for Children and Families</option>
+			<option value="54">	Department of Health and Human Services: Administration for Community Living</option>
+			<option value="55">	Department of Health and Human Services: Agency for Healthcare Research and Quality</option>
+			<option value="56">	Department of Health and Human Services: Centers for Disease Control and Prevention</option>
+			<option value="57">	Department of Health and Human Services: Centers for Medicare and Medicaid Services</option>
+			<option value="58">	Department of Health and Human Services: Food and Drug Administration</option>
+			<option value="59">	Department of Health and Human Services: Health Resources and Services Administration</option>
+			<option value="60">	Department of Health and Human Services: Indian Health Service</option>
+			<option value="61">	Department of Health and Human Services: National Institutes of Health</option>
+			<option value="62">	Department of Health and Human Services: Substance Abuse and Mental Health Services</option>
+			<option value="63">	Department of Homeland Security: Full Department</option>
+			<option value="64">	Department of Homeland Security: United States Citizenship and Immigration Services</option>
+			<option value="65">	Department of Homeland Security: Federal Emergency Management Agency</option>
+			<option value="66">	Department of Homeland Security: Federal Law Enforcement Training Center</option>
+			<option value="67">	Department of Homeland Security: Office of Intelligence and Analysis</option>
+			<option value="68">	Department of Homeland Security: National Protection and Programs Directorate</option>
+			<option value="69">	Department of Homeland Security: Science and Technology Directorate</option>
+			<option value="70">	Department of Homeland Security: Office of Health Affairs</option>
+			<option value="71">	Department of Homeland Security: Domestic Nuclear Detection Office</option>
+			<option value="72">	Department of Homeland Security: Transportation Security Administration</option>
+			<option value="73">	Department of Homeland Security: United States Customs and Border Protection</option>
+			<option value="74">	Department of Homeland Security: U.S. Immigration and Customs Enforcement</option>
+			<option value="75">	Department of Homeland Security: United States Coast Guard</option>
+			<option value="76">	Department of Homeland Security: United States Secret Service</option>
+			<option value="77">	Department of Housing and Urban Development: Full Department</option>
+			<option value="78">	Department of Housing and Urban Development: Community Planning and Development</option>
+			<option value="79">	Department of Housing and Urban Development: Fair Housing and Equal Opportunity</option>
+			<option value="80">	Department of Housing and Urban Development: Ginnie Mae</option>
+			<option value="81">	Department of Housing and Urban Development: Office of Lead Hazard Control</option>
+			<option value="82">	Department of Housing and Urban Development: Public and Indian Housing</option>
+			<option value="83">	Department of the Interior: Full Department</option>
+			<option value="84">	Department of the Interior: Bureau of Indian Affairs</option>
+			<option value="85">	Department of the Interior: Bureau of Indian Education</option>
+			<option value="86">	Department of the Interior: Bureau of Land Management</option>
+			<option value="87">	Department of the Interior: Bureau of Ocean Energy Management</option>
+			<option value="88">	Department of the Interior: Bureau of Reclamation</option>
+			<option value="89">	Department of the Interior: Bureau of Safety and Environmental Enforcement</option>
+			<option value="90">	Department of the Interior: National Park Service</option>
+			<option value="91">	Department of the Interior: Office of Surface Mining Reclamation and Enforcement</option>
+			<option value="92">	Department of the Interior: United States Fish and Wildlife Service</option>
+			<option value="93">	Department of the Interior: United States Geological Survey</option>
+			<option value="94">	Department of Justice: Full Department</option>
+			<option value="95">	Department of Justice: Bureau of Alcohol, Tobacco, Firearms, and Explosives</option>
+			<option value="96">	Department of Justice: Drug Enforcement Administration</option>
+			<option value="97">	Department of Justice: Federal Bureau of Investigation</option>
+			<option value="98">	Department of Justice: Federal Prison System</option>
+			<option value="99">	Department of Justice: Interagency Law Enforcement</option>
+			<option value="100">	Department of Justice: Legal Activities and U.S. Marshals</option>
+			<option value="101">	Department of Justice: National Security Division</option>
+			<option value="102">	Department of Justice: United States Parole Commission</option>
+			<option value="103">	Department of Labor: Full Department</option>
+			<option value="104">	Department of Labor: Bureau of Labor Statistics</option>
+			<option value="105">	Department of Labor: Employee Benefits Security Administration</option>
+			<option value="107">	Department of Labor: Mine Safety and Health Administration</option>
+			<option value="108">	Department of Labor: Occupational Safety and Health Administration</option>
+			<option value="109">	Department of Labor: Office of Federal Contract Compliance Programs</option>
+			<option value="110">	Department of Labor: Office of Labor Management Standards</option>
+			<option value="112">	Department of Labor: Office of Workers&#039; Compensation Programs</option>
+			<option value="113">	Department of State: Full Department</option>
+			<option value="114">	Department of State: Administration of Foreign Affairs</option>
+			<option value="115">	Department of State: International Commissions</option>
+			<option value="116">	Department of State: International Organizations and Conferences</option>
+			<option value="117">	Department of Transportation: Full Department</option>
+			<option value="118">	Department of Transportation: Bureau of Transportation Statistics</option>
+			<option value="119">	Department of Transportation: Federal Aviation Administration</option>
+			<option value="120">	Department of Transportation: Federal Highway Administration</option>
+			<option value="121">	Department of Transportation: Federal Motor Carrier Safety Administration</option>
+			<option value="122">	Department of Transportation: Federal Railroad Administration</option>
+			<option value="123">	Department of Transportation: Federal Transit Administration</option>
+			<option value="124">	Department of Transportation: Maritime Administration</option>
+			<option value="125">	Department of Transportation: National Highway Traffic Safety Administration</option>
+			<option value="126">	Department of Transportation: Pipeline and Hazardous Materials Safety Administration</option>
+			<option value="127">	Department of Transportation: Saint Lawrence Seaway Development Corporation</option>
+			<option value="128">	Department of the Treasury: Full Department</option>
+			<option value="129">	Department of the Treasury: Alcohol and Tobacco Tax and Trade Bureau</option>
+			<option value="130">	Department of the Treasury: Bureau of Engraving and Printing</option>
+			<option value="131">	Department of the Treasury: Federal Financing Bank</option>
+			<option value="132">	Department of the Treasury: Financial Crimes Enforcement Network</option>
+			<option value="133">	Department of the Treasury: Fiscal Service</option>
+			<option value="134">	Department of the Treasury: Interagency Law Enforcement</option>
+			<option value="135">	Department of the Treasury: Interest on the Public Debt</option>
+			<option value="136">	Department of the Treasury: Internal Revenue Service</option>
+			<option value="137">	Department of the Treasury: Office of Revenue Sharing</option>
+			<option value="138">	Department of the Treasury: Office of Thrift Supervision</option>
+			<option value="139">	Department of the Treasury: United States Mint</option>
+			<option value="140">	Department of Veterans Affairs: Full Department</option>
+			<option value="141">	Department of Veterans Affairs: Benefits Programs</option>
+			<option value="142">	Department of Veterans Affairs: Veterans Health Administration</option>
+			<option value="143">	Environmental Protection Agency: Full Department</option>
+			<option value="144">	Office of Management and Budget: Full Office</option>
+			<option value="145">	Office of the United States Trade Representative: Full Office</option>
+			<option value="146">	Office of the Director of National Intelligence: Full Office</option>
+			<option value="147">	Small Business Administration: Full Department</option>
+		</select>
+	</div>
+
+	NOTE: The above formatting was done manually. I spent several hours finding a way to insert new lines between characters. This was the best I could come up with, a two step replace using sed:
+	$ sed s/"><"/">å<"/g filename > temp_filename
+	$ sed $'s/å/\\\n/g' temp_filename > filename_tidy
+	first step replaces >< with å
+	second step replaces å with \n
