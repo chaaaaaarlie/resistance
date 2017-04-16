@@ -22,7 +22,7 @@ CURL_BIN="curl -s -c $COOKIES -b $COOKIES -e $REF_URL"
 
 SUBNUM=0 #tracks the number of submissions
 
-#until [ 'trump' = 'jailed' ]; do
+until [ 'trump' = 'jailed' ]; do
 
 	COUNT=0
 	BOOL=0
@@ -30,7 +30,6 @@ SUBNUM=0 #tracks the number of submissions
 	CITY=""
 	STATE=""
 	
-
 	echo
 	echo "Starting new session..."
 	echo
@@ -41,14 +40,20 @@ SUBNUM=0 #tracks the number of submissions
     #echo -n "Getting CSRF token..."
 	#echo
 
-	#$CURL_BIN $URL > /dev/null
+	#$CURL_BIN $URL > temp.html
 	#wait ${!}
 
-	XSRF_TOKEN="$(grep csrftoken $COOKIES | sed 's/^.*csrftoken[[:space:]]\s*//')"
-	echo -n "Token obtained:"$XSRF_TOKEN
-	echo
+	#XSRF_TOKEN="$(grep csrftoken $COOKIES | sed 's/^.*csrftoken[[:space:]]\s*//')"
 
-    echo `date`
+	#MATCH=name\=\"form_build_id\"' 'value\=\"form\-
+	#FORM_ID=$(grep "$MATCH" temp.html | sed s/^.*"$MATCH"// | cut -f1 -d\")
+
+	FORM_ID=`env LC_CTYPE=C tr -dc "a-zA-Z0-9\-\_" < /dev/urandom | head -c 43`
+
+	#echo -n "Token obtained:"$XSRF_TOKEN
+	#echo
+
+    echo "The date: "`date`
     echo
 
 	#Generate 32-bit random integer
@@ -59,16 +64,17 @@ SUBNUM=0 #tracks the number of submissions
 	#USER_AGENT="Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/60"$WK_VER" (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/60"$WK_VER
 
 	USER_AGENT_LN=`expr $RANDO % $USER_AGENTS_COUNT`
-	echo $USER_AGENT_LN
 	USER_AGENT=$( sed -n -e "$USER_AGENT_LN p" $USER_AGENTS_FILE)
- 	echo $USER_AGENT
+ 	
 
+ 	PLACE_LN=`expr $RANDO % $PLACES_COUNT`
+ 	CITY=`awk "NR == $PLACE_LN {print; exit}" $PLACES_FILE | cut -d "	" -f 3`
+ 	STATE=`awk "NR == $PLACE_LN {print; exit}" $PLACES_FILE | cut -d "	" -f 4`
 
 	#Select random line in word/name files
 	FIRSTNAME_LN=`expr $RANDO % $FIRSTNAMES_COUNT`
 	LASTNAME_LN=`expr $RANDO % $LASTNAMES_COUNT`
 	
-
 	#Spit out random first and last name
 	FIRSTNAME=$( sed -n -e "$FIRSTNAME_LN p" $FIRSTNAMES_FILE)
 	LASTNAME=$( sed -n -e "$LASTNAME_LN p" $LASTNAMES_FILE)
@@ -80,91 +86,62 @@ SUBNUM=0 #tracks the number of submissions
 	
 	echo "Generated User Info:"
 	echo "FULL NAME: "$FIRSTNAME $LASTNAME
-	echo "EMAIL: " $EMAIL
+	echo "EMAIL: "$EMAIL
+	echo "CITY: "$CITY
+	echo "STATE: "$STATE
+	echo "USER AGENT: "$USER_AGENT
 	echo
 
 	#question 1
-	COUNT=0
-	CHOICES=0
+	COUNT=1
 	while [ $COUNT -lt 148 ]; do
-		BOOL=$((RANDOM%9999))
-		if [ $BOOL -lt 100 ]
-		then
-			QBODY="$QBODY -F 'submitted[cabinet_agencies][]=$COUNT'"
-			CHOICES=$[$CHOICES+1]
+		if [ ! $COUNT -eq 111 ] && [ ! $COUNT -eq 106 ]
+			then
+				QBODY="$QBODY -F 'submitted[cabinet_agencies][]=$COUNT'"
 		fi
-		COUNT=$[$COUNT+1]
+		COUNT=$[$COUNT+1]	
 	done
-	if [ $CHOICES -eq 0 ]
-		then
-		QBODY="$QBODY -F 'submitted[cabinet_agencies][]=0'"
-	fi
 
 	#question 2
-	COUNT=0
-	CHOICES=0
-	while [ $COUNT -lt 148 ]; do
-		BOOL=$((RANDOM%9999))
-		if [ $BOOL -lt 100 ]
-		then
-			QBODY="$QBODY -F 'submitted[select_other_agencies_boards_and_commissions_select_as_many_as_applicable][]=$COUNT'"
-		fi
+	COUNT=1
+	while [ $COUNT -lt 115 ]; do
+				QBODY="$QBODY -F 'submitted[select_other_agencies_boards_and_commissions_select_as_many_as_applicable][]=$COUNT'"
 		COUNT=$[$COUNT+1]
 	done
-	if [ $CHOICES -eq 0 ]
-		then
-		QBODY="$QBODY -F 'submitted[select_other_agencies_boards_and_commissions_select_as_many_as_applicable][]=0'"
-	fi
 
 	#comments
 	QBODY="$QBODY -F 'submitted[reform_comments]='"
 
 	#question 3
-	COUNT=0
-	CHOICES=0
+	COUNT=1
+
 	while [ $COUNT -lt 148 ]; do
-		BOOL=$((RANDOM%9999))
-		if [ $BOOL -lt 100 ]
-		then
-			QBODY="$QBODY -F 'submitted[select_agencies_or_programs][]=$COUNT'"
+		if [ ! $COUNT -eq 111 ] && [ ! $COUNT -eq 106 ]
+			then
+				QBODY="$QBODY -F 'submitted[select_agencies_or_programs][]=$COUNT'"
 		fi
 		COUNT=$[$COUNT+1]
 	done
-	if [ $CHOICES -eq 0 ]
-		then
-		QBODY="$QBODY -F 'submitted[select_agencies_or_programs][]=0'"
-	fi
 
 	#question 4
-	COUNT=0
-	CHOICES=0
-	while [ $COUNT -lt 148 ]; do
-		BOOL=$((RANDOM%9999))
-		if [ $BOOL -lt 100 ]
-		then
-			QBODY="$QBODY -F 'submitted[select_other_agencies_boards_and_commissions_select_as_many_as_applicable_b][]=$COUNT'"
-		fi
+	COUNT=1
+
+	while [ $COUNT -lt 115 ]; do
+		QBODY="$QBODY -F 'submitted[select_other_agencies_boards_and_commissions_select_as_many_as_applicable_b][]=$COUNT'"
 		COUNT=$[$COUNT+1]
 	done
-	if [ $CHOICES -eq 0 ]
-		then
-		QBODY="$QBODY -F 'submitted[select_other_agencies_boards_and_commissions_select_as_many_as_applicable_b][]=0'"
-	fi
 	
 	#comments
 	QBODY="$QBODY -F 'submitted[list_specific_programs]='"
 
 	#question 5
-	RAND=$((RANDOM%6))
-	QBODY="$QBODY -F 'submitted[select_why][select]=$RAND'"
-	if [ $RAND -eq 5 ]
-		then
-		QBODY="$QBODY -F 'submitted[select_why][other]='"
-	fi
+
+	RAND=$((RANDOM%3 + 1))
+			QBODY="$QBODY -F 'submitted[select_why][select]=$RAND'"
 
 	#contact information
-	QBODY="$QBODY -F 'submitted[first_name]=$FIRST_NAME'"
-	QBODY="$QBODY -F 'submitted[last_name]=$LAST_NAME'"
+	QBODY="$QBODY -F 'submitted[first_name]=$FIRSTNAME'"
+	QBODY="$QBODY -F 'submitted[last_name]=$LASTNAME'"
 	QBODY="$QBODY -F 'submitted[email_address]=$EMAIL'"
 	QBODY="$QBODY -F 'submitted[city]=$CITY'"
 	QBODY="$QBODY -F 'submitted[state]=$STATE'"
@@ -174,34 +151,36 @@ SUBNUM=0 #tracks the number of submissions
 	QBODY="$QBODY -F 'details[page_num]=1'"
 	QBODY="$QBODY -F 'details[page_count=1'"
 	QBODY="$QBODY -F 'details[finished]=0'"
-	QBODY="$QBODY -F 'form_build_id=form-V2W1naBNwza1JNNoMgRvaOItAeIJuhSb6q9E2qeroXU'"
+	QBODY="$QBODY -F 'form_build_id=form-$FORM_ID'"
 	QBODY="$QBODY -F 'form_id=webform_client_form_301'"
 	QBODY="$QBODY -F 'op=Submit'"
 
 	# Create curl call
 
-	CMD="curl -S -c $COOKIES -b $COOKIES -A '$USER_AGENT' $QBODY -F 'csrfmiddlewaretoken=$XSRF_TOKEN' -e $REF_URL $URL"
+	CMD="curl -S -c $COOKIES -b $COOKIES -A '$USER_AGENT' $QBODY -e $REF_URL $URL"
+	#CMD="curl -S -c $COOKIES -b $COOKIES -A '$USER_AGENT' $QBODY -F 'csrfmiddlewaretoken=$XSRF_TOKEN' -e $REF_URL $URL"
 
 	# Uncomment to test output
 	echo $CMD
 	echo
 
 	# Fire Away
-	#eval $CMD
-	#wait ${!}
+	eval $CMD
+	wait ${!}
 	
 	#Clean Up!
 	echo "Deleting cookies..."
-	echo
-	#rm $COOKIES
+	rm $COOKIES
+	#echo "Deleting site data..."
+	#rm ./temp.html
 
 	#wait for a bit before doing it again
-	echo "Cooling off for 10-20 seconds..."
-	echo
+	#echo "Cooling off for 10-20 seconds..."
+
 	#sleep `expr $RANDOM % 10 + 10`
 
 	SUBNUM=$[$SUBNUM+1]
 
 	echo "Session "$SUBNUM" finished!"
-	echo
-#done
+
+done
